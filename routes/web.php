@@ -39,7 +39,8 @@ Route::middleware("auth")->group(function () {
     // logout
     Route::get("logout", [AuthenticationController::class, 'logout'])->name("auth.logout");
     // commnet
-    Route::post("/posts/{slug}", [HomeController::class, "comment"])->name("comment.posts");
+    Route::post("/posts/{slug}", [HomeController::class, "storeComment"])->name("comments.store");
+    Route::put("/posts/comments/{comment}", [HomeController::class, "updateComment"])->name("comments.update");
 
     Route::resource("/my-posts", PostController::class);
     Route::get("/my-posts/{slug}/{is_check}", [PostController::class, "is_active"])->name("my-posts.is_active");

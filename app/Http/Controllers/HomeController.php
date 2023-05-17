@@ -10,6 +10,7 @@ use App\Models\Contact;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
@@ -69,7 +70,8 @@ class HomeController extends Controller
                 'posts_trending' => $posts_trending,
             ]);
         }
-        $post->update(['view' => ++$post->view]);
+        // DB::table("posts")->whereSlug($slug)->update(['view' => ++$post->view]);
+        $post->updateQuietly(['view' => ++$post->view]);
         return view("pages.details_post", [
             'post' => $post,
             'posts_popular' => $posts_popular,
@@ -77,7 +79,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function comment(StoreCommentRequest $request, $slug)
+    public function storeComment(StoreCommentRequest $request, $slug)
     {
         $post = Post::where("slug", $slug)->first();
         $validated = $request->validated();
@@ -87,6 +89,15 @@ class HomeController extends Controller
             return back();
         }
         return back()->withInput($request->validated())->with("error", "Bình luận thất bại vui lòng thử lại");
+    }
+
+    public function updateComment(StoreCommentRequest $request, Comment $comment)
+    {
+        $validated = $request->validated();
+        if ($comment->update($validated)) {
+            return back();
+        }
+        return back()->withInput($request->validated())->with("error", "Cập nhật bình luận thất bại vui lòng thử lại");
     }
 
     public function about()

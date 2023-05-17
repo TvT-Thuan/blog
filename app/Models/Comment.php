@@ -17,7 +17,7 @@ class Comment extends Model
     public function getFormatDateAttribute()
     {
         if($this->updated_at != $this->created_at){
-            return $this->created_at->format("M D 'y h:i") . " - update " . $this->updated_at->diffForHumans();
+            return "Cập nhật " . $this->updated_at->diffForHumans();
         }
         return $this->created_at->diffForHumans();
     }

@@ -1,15 +1,4 @@
 @if ($paginator->hasPages())
-    {{-- <div class="text-start py-4">
-                            <div class="custom-pagination">
-                                <a href="{{ $category->postsPagination()->previousPageUrl() }}" class="prev">Prevous</a>
-                                <a href="#" class="active">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a href="{{ $$category->postsPagination()->nextPageUrl() }}" class="next">Next</a>
-                            </div>
-                        </div> --}}
     <div class="text-start py-4">
         <div class="custom-pagination">
             {{-- Previous Page Link --}}

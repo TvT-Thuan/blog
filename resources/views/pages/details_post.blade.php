@@ -34,48 +34,35 @@
                                             <span class="text-muted"> {{ $comment->format_date }}</span>
                                         </div>
                                         <div class="comment-body">
-                                            {{ $comment->content }}
+                                            <p data-id="{{ $comment->id }}" class="content_comment" >{{ $comment->content }}</p>
+                                            @auth
+                                                @if ($comment->user_id == auth()->user()->id || auth()->user()->role == 2)
+                                                    <p class="text-end option_comment">
+                                                        <a class="me-2" onclick="showFormEdit(event, {{ $comment->id }})" href="#">Chỉnh sửa</a>
+                                                        <a href="">Xoá</a>
+                                                    </p>
+                                                    <div class="row d-none form_edit" data-id="{{ $comment->id }}">
+                                                        <form action="{{ route('comments.update', $comment) }}" method="POST">
+                                                            @csrf
+                                                            @method("PUT")
+                                                            <div class="col-12 mb-3">
+                                                                <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message" placeholder="Nhập bình luận">{{ old('content', $comment->content) }}</textarea>
+                                                                @error('content')
+                                                                    <div class="invalid-feedback">
+                                                                        <p class="m-0">{{ $message }}</p>
+                                                                    </div>
+                                                                @enderror
+                                                                @include('layouts.alert')
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <button class="btn btn-primary">Cập nhật</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                @endif
+                                            @endauth
+                                            
                                         </div>
-
-                                        {{-- <div class="comment-replies bg-light p-3 mt-3 rounded">
-                                            <h6 class="comment-replies-title mb-4 text-muted text-uppercase">2 replies</h6>
-
-                                            <div class="reply d-flex mb-4">
-                                                <div class="flex-shrink-0">
-                                                    <div class="avatar avatar-sm rounded-circle">
-                                                        <img class="avatar-img" src="assets/img/person-4.jpg" alt=""
-                                                            class="img-fluid">
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1 ms-2 ms-sm-3">
-                                                    <div class="reply-meta d-flex align-items-baseline">
-                                                        <h6 class="mb-0 me-2">Brandon Smith</h6>
-                                                        <span class="text-muted">2d</span>
-                                                    </div>
-                                                    <div class="reply-body">
-                                                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="reply d-flex">
-                                                <div class="flex-shrink-0">
-                                                    <div class="avatar avatar-sm rounded-circle">
-                                                        <img class="avatar-img" src="assets/img/person-3.jpg" alt=""
-                                                            class="img-fluid">
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1 ms-2 ms-sm-3">
-                                                    <div class="reply-meta d-flex align-items-baseline">
-                                                        <h6 class="mb-0 me-2">James Parsons</h6>
-                                                        <span class="text-muted">1d</span>
-                                                    </div>
-                                                    <div class="reply-body">
-                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio
-                                                        dolore sed eos sapiente, praesentium.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                     </div>
                                 </div>
                             @empty
@@ -89,11 +76,10 @@
                             <div class="col-lg-12">
                                 <h5 class="comment-title">Để lại bình luận</h5>
                                 <div class="row">
-                                    <form action="{{ route('comment.posts', $post->slug) }}" method="POST">
+                                    <form action="{{ route('comments.store', $post->slug) }}" method="POST">
                                         @csrf
                                         <div class="col-12 mb-3">
-                                            <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message"
-                                                placeholder="Nhập bình luận">{{ old('content') }}</textarea>
+                                            <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message" placeholder="Nhập bình luận">{{ old('content') }}</textarea>
                                             @error('content')
                                                 <div class="invalid-feedback">
                                                     <p class="m-0">{{ $message }}</p>
@@ -116,3 +102,6 @@
         </section>
     </main><!-- End #main -->
 @endsection
+@push('js')
+    <script src="{{ asset("assets/js/post_details/main.js") }}"></script>
+@endpush
