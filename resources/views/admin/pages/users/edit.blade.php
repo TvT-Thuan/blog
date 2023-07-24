@@ -1,7 +1,7 @@
 @extends('admin.layouts.main')
 @section('content')
     <div class="card card-primary mt-5">
-        <h2 class="m-4">Add user</h2>
+        <h2 class="m-4">Edit user</h2>
         <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -55,7 +55,7 @@
                             </div>
                         @enderror
                         <div class="text-center mt-3">
-                            <img id="output" class="col-6 col-md-4 col-lg-2" width="100%" height="100%" />
+                            <img id="output" src="{{ asset($user->image_url) }}" class="col-6 col-md-4 col-lg-2" width="100%" height="100%" />
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,21 @@
                         </div>
                     @enderror
                 </div>
+                
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" class="form-control @error('role') is-invalid @enderror">
+                        <option @if (old('role', $user->role) === 0) selected @endif value="0">User</option>
+                        <option @if (old('role', $user->role) === 1) selected @endif value="1">Admin</option>
+                    </select>
+                    @error('role')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
             </div>
+
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Update User</button>

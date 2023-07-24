@@ -40,5 +40,6 @@ class ContactAdminController extends Controller
     public function reply(Request $request)
     {
         Mail::to($request->email)->queue(new ContactsReply($request->all()));
+        return redirect()->route("admin.contacts.index")->with("success", "Send mail complete");
     }
 }

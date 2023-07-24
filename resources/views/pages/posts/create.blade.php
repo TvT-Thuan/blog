@@ -39,7 +39,7 @@
 
                             <div class="form-outline mb-3">
                                 <div class="form-group">
-                                    <label for="form-label">Image</label>
+                                    <label for="form-label">Ảnh</label>
                                     <input name="image" type="file"
                                         class="form-control @error('image') is-invalid @enderror"
                                         placeholder="Enter image category" id="customFile"
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="form-outline mb-3">
-                                <label class="form-label" for="content">Content</label>
+                                <label class="form-label" for="content">Nội dung</label>
                                 <textarea id="content" class="@error('content') is-invalid @enderror" name="content">{{ old('content') }}</textarea>
                                 @error('content')
                                     <div class="invalid-feedback">
@@ -66,7 +66,7 @@
                             </div>
 
                             <div class="form-outline mb-3">
-                                <label class="form-label">Category</label>
+                                <label class="form-label">Danh mục</label>
                                 <select name="category_id"
                                     class="form-control form-control-lg  @error('category_id') is-invalid @enderror">
                                     @foreach ($categories as $category)
@@ -77,21 +77,6 @@
                                     @endforeach
                                 </select>
                                 @error('category_id')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-outline mb-3">
-                                <label class="form-label">Active</label>
-                                <select name="is_active"
-                                    class="form-control form-control-lg  @error('is_active') is-invalid @enderror">
-                                    <option @if (old('is_active') === '1') selected @endif value="1">Active</option>
-                                    <option @if (old('is_active') === '0') selected @endif value="0">Not active
-                                    </option>
-                                </select>
-                                @error('is_active')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

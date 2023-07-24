@@ -17,7 +17,7 @@
                 <tbody>
                     @foreach ($posts as $key => $post)
                         <tr>
-                            <td>{{ $key }}</td>
+                            <td>{{ ++$key }}</td>
                             <td><a target="_blank" href="{{ route("show.posts", $post->slug) }}">{{ $post->title }}</a></td>
                             <td><img width="25px" src="{{ asset($post->image_url) }}" alt=""></td>
                             <td>{{ $post->view }}</td>
@@ -81,6 +81,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $posts->links("pagination::bootstrap-4") }}
         </div>
         <!-- /.card-body -->
     </div>

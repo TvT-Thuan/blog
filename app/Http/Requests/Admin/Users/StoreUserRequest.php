@@ -28,6 +28,7 @@ class StoreUserRequest extends FormRequest
             "email" => "bail|required|email|not_in|unique:users,email",
             "password" => "bail|required|min:8|max:50",
             "is_active" => ["bail", "nullable", "boolean"],
+            "role" => ["bail", "boolean"],
         ];
     }
 }

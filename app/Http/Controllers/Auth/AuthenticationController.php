@@ -23,7 +23,7 @@ class AuthenticationController extends Controller
     public function __construct()
     {
         $this->categories = Category::where("is_active", 1)->get();
-        $this->posts_latest = Post::latest()->limit(5)->get();
+        $this->posts_latest = Post::where("is_active", 1)->whereRelation("category", "is_active", 1)->latest()->limit(5)->with("category")->get();;
         View::share([
             'categories' => $this->categories,
             'posts_latest' => $this->posts_latest
@@ -37,12 +37,16 @@ class AuthenticationController extends Controller
     public function storeLogin(StoreLoginRequest $request)
     {
         if (Auth::attempt($request->validated())) {
-            if (Auth::user()->role == 2) {
+            if (Auth::user()->is_active == 0) {
+                Auth::logout();
+                return back()->withInput($request->validated())->with('error', "Tài khoản đã bị khoá");
+            }
+            if (Auth::user()->role == 1) {
                 return redirect()->route("admin.dashboard");
             }
             return redirect()->route("home");
         }
-        return back()->withInput($request->validated())->with('error', "Email or Password incorrect");
+        return back()->withInput($request->validated())->with('error', "Email hoặc mật khẩu không đúng");
     }
 
     public function register()
@@ -57,10 +61,10 @@ class AuthenticationController extends Controller
                 if (Auth::login($user)) {
                     return redirect()->route("home");
                 };
-                return redirect()->route("auth.login")->with("error", "Login failed, please try again");
+                return redirect()->route("auth.login")->with("error", "Đăng nhập thất bại vui lòng thử lại");
             }
         }
-        return back()->with("error", "Create account failed, please try again");
+        return back()->with("error", "Tạo tài khoản thất bại vui lòng thử lại sau");
     }
 
     public function logout()

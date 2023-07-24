@@ -21,7 +21,7 @@
                                 <a class="btn" href="{{ route('admin.comments.edit', $comment) }}"><i
                                         class="fas fa-edit text-warning"></i></a>
                                 |
-                                <form id="form" action="{{ route('admin.comments.destroy', $comment) }}" method="comment">
+                                <form id="form" action="{{ route('admin.comments.destroy', $comment) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn"><i class="fas fa-trash text-danger"></i></button>
@@ -31,6 +31,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $comments->links("pagination::bootstrap-4") }}
         </div>
         <!-- /.card-body -->
     </div>

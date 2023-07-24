@@ -9,28 +9,25 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
 
-    <!-- Favicons -->
     <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
     <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
-
-    <!-- Vendor CSS Files -->
     <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
-
-    <!-- Template Main CSS Files -->
     <link href="{{ asset('assets/css/variables.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/plugins/toastr/toastr.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
-    @stack("css")
+    @stack('css')
 </head>
 
 <body>
@@ -67,13 +64,14 @@
 
                 <!-- ======= Search Form ======= -->
                 <div class="search-form-wrap js-search-form-wrap">
-                    <form action="search-result.html" class="search-form">
+                    <form action="{{ route('search') }}" method="GET" class="search-form">
                         <span class="icon bi-search"></span>
-                        <input type="text" placeholder="Search" class="form-control">
+                        <input type="text" name="key" placeholder="Search" class="form-control"
+                            value="{{ $key ?? '' }}">
                         <button class="btn js-search-close"><span class="bi-x"></span></button>
                     </form>
-                </div><!-- End Search Form -->
-
+                </div>
+                <!-- End Search Form -->
             </div>
 
         </div>

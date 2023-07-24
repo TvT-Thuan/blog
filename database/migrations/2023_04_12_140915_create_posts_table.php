@@ -18,12 +18,12 @@ class CreatePostsTable extends Migration
             $table->string("title");
             $table->string("slug")->unique();
             $table->string("image");
-            $table->text("content");
+            $table->longText("content");
             $table->unsignedBigInteger("view")->default(0);
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->boolean("is_check")->default(false);
-            $table->boolean("is_active")->default(true);
+            $table->boolean("is_active")->default(false);
             $table->timestamps();
         });
     }

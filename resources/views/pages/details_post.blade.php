@@ -1,4 +1,17 @@
 @extends('layouts.main')
+@push('css')
+    <style>
+        .btn-outline-primary{
+            color: black !important;
+            border: 1px solid black !important;
+        }
+        .btn-outline-primary:hover{
+            color: white !important;
+            border: 1px solid black !important;
+            background-color: black;
+        }
+    </style>
+@endpush
 @section('content')
     <main id="main">
 
@@ -34,19 +47,31 @@
                                             <span class="text-muted"> {{ $comment->format_date }}</span>
                                         </div>
                                         <div class="comment-body">
-                                            <p data-id="{{ $comment->id }}" class="content_comment" >{{ $comment->content }}</p>
+                                            <p data-id="{{ $comment->id }}" class="content_comment">{{ $comment->content }}
+                                            </p>
                                             @auth
-                                                @if ($comment->user_id == auth()->user()->id || auth()->user()->role == 2)
-                                                    <p class="text-end option_comment">
-                                                        <a class="me-2" onclick="showFormEdit(event, {{ $comment->id }})" href="#">Chỉnh sửa</a>
-                                                        <a href="">Xoá</a>
-                                                    </p>
-                                                    <div class="row d-none form_edit" data-id="{{ $comment->id }}">
-                                                        <form action="{{ route('comments.update', $comment) }}" method="POST">
+                                                @if ($comment->user_id == auth()->user()->id || auth()->user()->role == 1)
+                                                    <div class="option_comment d-flex justify-content-end">
+                                                        <a class="me-2 btn btn-sm btn-outline-primary"
+                                                            onclick="showFormEdit(event, {{ $comment->id }})"
+                                                            href="#">Chỉnh sửa</a>
+                                                        <form
+                                                            action="{{ route('comments.destroy', ['slug' => $post->slug, 'comment' => $comment->id]) }}"
+                                                            method="POST">
                                                             @csrf
-                                                            @method("PUT")
+                                                            @method('DELETE')
+                                                            <button class="btn btn-sm btn-outline-primary">Xoá</button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="row d-none form_edit" data-id="{{ $comment->id }}">
+                                                        <form
+                                                            action="{{ route('comments.update', ['slug' => $post->slug, 'comment' => $comment->id]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
                                                             <div class="col-12 mb-3">
-                                                                <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message" placeholder="Nhập bình luận">{{ old('content', $comment->content) }}</textarea>
+                                                                <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message"
+                                                                    placeholder="Nhập bình luận">{{ old('content', $comment->content) }}</textarea>
                                                                 @error('content')
                                                                     <div class="invalid-feedback">
                                                                         <p class="m-0">{{ $message }}</p>
@@ -61,7 +86,7 @@
                                                     </div>
                                                 @endif
                                             @endauth
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -79,7 +104,8 @@
                                     <form action="{{ route('comments.store', $post->slug) }}" method="POST">
                                         @csrf
                                         <div class="col-12 mb-3">
-                                            <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message" placeholder="Nhập bình luận">{{ old('content') }}</textarea>
+                                            <textarea name="content" class="form-control @error('content') is-invalid @enderror" id="comment-message"
+                                                placeholder="Nhập bình luận">{{ old('content') }}</textarea>
                                             @error('content')
                                                 <div class="invalid-feedback">
                                                     <p class="m-0">{{ $message }}</p>
@@ -103,5 +129,5 @@
     </main><!-- End #main -->
 @endsection
 @push('js')
-    <script src="{{ asset("assets/js/post_details/main.js") }}"></script>
+    <script src="{{ asset('assets/js/post_details/main.js') }}"></script>
 @endpush

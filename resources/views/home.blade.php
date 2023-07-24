@@ -11,7 +11,7 @@
                             <div class="d-lg-flex post-entry-2 mb-5">
                                 <a href="{{ route('show.posts', $post->slug) }}"
                                     class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
-                                    <img src="{{ $post->image_url }}" alt="" style="object-fit: cover" class="img-fluid"/>
+                                    <img src="{{ $post->image_url }}" alt="" style="object-fit: cover" width="100%" class="img-fluid"/>
                                 </a>
                                 <div>
                                     <div class="post-meta">
@@ -24,8 +24,7 @@
                                     {{ $post->content_limit }}
                                     <div class="d-flex align-items-center author">
                                         <div class="photo">
-                                            <img src="{{ asset($post->user->image_url) }}" alt=""
-                                                class="img-fluid" />
+                                            <img src="{{ asset($post->user->image_url) }}" alt="" height="40px" style="object-fit: cover"/>
                                         </div>
                                         <div class="name">
                                             <h3 class="m-0 p-0">{{ $post->user->name }}</h3>

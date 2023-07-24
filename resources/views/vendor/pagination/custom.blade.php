@@ -1,13 +1,13 @@
 @if ($paginator->hasPages())
-    <div class="text-start py-4">
+    <div class="text-center py-4">
         <div class="custom-pagination">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <a class="prev disabled">
-                    Prevous
+                    Lùi lại
                 </a>
             @else
-                <a class="prev" href="{{ $paginator->previousPageUrl() }}">Prevous</a>
+                <a class="prev" href="{{ $paginator->previousPageUrl() }}">Lùi lại</a>
             @endif
 
             {{-- Pagination Elements --}}
@@ -31,10 +31,10 @@
 
             {{-- Next Page Link --}}
             @if ($paginator->hasMorePages())
-                <a class="next" href="{{ $paginator->nextPageUrl() }}">Next</a>
+                <a class="next" href="{{ $paginator->nextPageUrl() }}">Tiếp theo</a>
             @else
                 <a class="next disabled">
-                    Next
+                    Tiếp theo
                 </a>
             @endif
         </div>

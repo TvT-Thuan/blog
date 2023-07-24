@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             "name" => "Thuan Tran",
             "email" => "tvt.thuan241@gmail.com",
             "password" => "thuan221202",
-            "role" => 2,
+            "role" => 1,
             "is_active" => 1,
         ]);
     }

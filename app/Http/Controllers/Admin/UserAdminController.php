@@ -40,15 +40,19 @@ class UserAdminController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        if($user->id == 1 && $request->role != 1){
+            return back()->withInput($request->validated())->with("error", "Your not change role account");
+        }
         if ($user->update($request->validated())) {
             return redirect()->route("admin.users.index")->with("success", "Update user success");
         }
+        dd($request->validated());
         return back()->withInput($request->validated())->with("error", "Update user failed please try again");
     }
 
     public function destroy(User $user)
     {
-        if($user->role == 2){
+        if($user->id == 1){
             return redirect()->route("admin.users.index")->with("error", "Your not delete account");
         }
         if ($user->delete()) {

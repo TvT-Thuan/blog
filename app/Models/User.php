@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'image',
         'role',
+        'socialite',
         'is_active',
     ];
 
@@ -34,9 +35,6 @@ class User extends Authenticatable
 
     public function getRoleNameAttribute()
     {
-        if ($this->role == 2) {
-            return "Supper Admin";
-        }
         if ($this->role == 1) {
             return "Admin";
         }
@@ -59,12 +57,14 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = bcrypt($value);
+        if($value != null){
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 
     public function setImageAttribute($value)
     {
-        $path = $value->store(Auth::user()->email);
+        $path = $value->store(Auth::user()->email . rand(1,100));
         $this->attributes['image'] = $path;
     }
 

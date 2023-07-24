@@ -14,7 +14,6 @@
                     {{-- name --}}
                     <div class="col-md-4">
                         <div class="info-item">
-                            <i class="bi bi-person-circle"></i>
                             <h3>Name</h3>
                             <p>{{ Auth::user()->name }}</p>
                         </div>
@@ -22,12 +21,10 @@
                     {{-- email --}}
                     <div class="col-md-4">
                         <div class="info-item">
-                            <i class="bi bi-envelope"></i>
                             <h3>Email</h3>
                             <p>{{ Auth::user()->email }}</< /p>
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div class="info-item">
                             <h3>Avatar</h3>

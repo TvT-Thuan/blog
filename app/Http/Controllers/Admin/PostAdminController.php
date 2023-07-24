@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\AcceptPost;
+use App\Events\PostChangeActive;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Post\StorePostRequest;
 use App\Http\Requests\Admin\Post\UpdatePostRequest;
 use App\Models\Category;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,7 +18,7 @@ class PostAdminController extends Controller
 {
     public function index()
     {
-        $posts = Post::paginate();
+        $posts = Post::latest()->paginate();
         return view("admin.pages.posts.index", [
             'posts' => $posts,
         ]);
@@ -89,11 +92,13 @@ class PostAdminController extends Controller
     {
         if ($is_active == 0 || $is_active == 1) {
             if ($post->update(['is_active' => $is_active])) {
+                if ($post->user_id != auth()->user()->id) {
+                    event(new PostChangeActive($post));
+                }
                 return redirect()->route("admin.posts.index")->with("success", "Update post completed");
             };
             return back()->with("error", "Update post failed please try again");
         }
         return back()->with("error", "Update post failed! Status active invalid");
     }
-
 }

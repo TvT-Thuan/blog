@@ -26,8 +26,17 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::where("user_id", Auth::user()->id)->paginate(5);
+        $posts_not_active = Post::where([
+            ["user_id", Auth::user()->id],
+            ["is_active", 0],
+        ])->latest()->paginate(5);
+        $posts = Post::where([
+            ["user_id", Auth::user()->id],
+            ["is_active", 1],
+        ])->latest()->paginate(5);
+        
         return view("pages.posts.index", [
+            "posts_not_active" => $posts_not_active,
             "posts" => $posts,
         ]);
     }
@@ -42,9 +51,9 @@ class PostController extends Controller
         $validated = $request->validated();
         $validated['user_id'] = Auth::user()->id;
         if (Post::create($validated)) {
-            return redirect()->route("my-posts.index")->with("success", "Create post success");
+            return redirect()->route("my-posts.index")->with("success", "Thêm bài viết thành công");
         }
-        return back()->withInput($request->validated())->with("error", "Create post failed please try again");
+        return back()->withInput($request->validated())->with("error", "Thêm bài viết thất bại vui lòng thử lại");
     }
 
     public function edit($slug)
@@ -68,9 +77,9 @@ class PostController extends Controller
             Storage::delete($post->image);
         }
         if ($post->update($request->validated())) {
-            return redirect()->route("my-posts.index")->with("success", "Update post success");
+            return redirect()->route("my-posts.index")->with("success", "Cập nhật bài viết thành công");
         }
-        return back()->withInput($request->validated())->with("error", "Update post failed please try again");
+        return back()->withInput($request->validated())->with("error", "Cập nhật bài viết thất bại vui lòng thử lại");
     }
 
     public function destroy($slug)
@@ -81,9 +90,9 @@ class PostController extends Controller
         }
         Storage::delete($post->image);
         if ($post->delete()) {
-            return redirect()->route("my-posts.index")->with("success", "Delele post success");
+            return redirect()->route("my-posts.index")->with("success", "Xoá bài viết thành công");
         }
-        return back()->with("error", "Delele post failed please try again");
+        return back()->with("error", "Xoá bài viết thất bại vui lòng thử lại");
     }
 
     public function is_active($slug, $is_active)
@@ -91,11 +100,11 @@ class PostController extends Controller
         $post = $this->findAndCheck($slug, Auth::user()->id);
         if ($is_active == 0 || $is_active == 1) {
             if ($post->update(['is_active' => $is_active])) {
-                return redirect()->route("my-posts.index")->with("success", "Update post completed");
+                return redirect()->route("my-posts.index")->with("success", "Đã thay đổi trạng thái bài viết thành công");
             };
-            return back()->with("error", "Update post failed please try again");
+            return back()->with("error", "Đã thay đổi trạng thái bài viết thất bại");
         }
-        return back()->with("error", "Update post failed! Status active invalid");
+        return back()->with("error", "Đã thay đổi trạng thái bài viết thất bại! Trạng thái không hợp lệ");
     }
 
     public function findAndCheck($slug, $user_id)

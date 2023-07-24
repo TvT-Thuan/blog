@@ -24,7 +24,7 @@
                     <i class="bi bi-chevron-down dropdown-indicator"></i>
                 </a>
                 <ul>
-                    @if (Auth::user()->role == 2)
+                    @if (Auth::user()->role == 1)
                         <li><a target="_blank" href="{{ route("admin.dashboard") }}">Trang quản trị</a></li>
                     @endif
                     <li><a href="{{ route("my-posts.index") }}">Bài viết của tôi</a></li>

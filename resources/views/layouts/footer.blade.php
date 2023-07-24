@@ -23,8 +23,9 @@
                       <h3 class="footer-heading">Danh mục</h3>
                       <ul class="footer-links list-unstyled">
                           @foreach ($categories as $category)
-                              <li><a href="{{ route('show.categories', $category->slug) }}"><i
-                                          class="bi bi-chevron-right"></i>{{ $category->name }}</a></li>
+                              <li>
+                                  <a href="{{ route('show.categories', $category->slug) }}">{{ $category->name }}</a>
+                              </li>
                           @endforeach
                       </ul>
                   </div>
@@ -64,7 +65,7 @@
                       </div>
 
                       <div class="credits">
-                          Designed by TVT
+                          Web k12
                       </div>
 
                   </div>
@@ -92,14 +93,32 @@
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
           class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
+  <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
   <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
   <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+  <script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
 
-  <!-- Template Main JS File -->
+  <script src="{{ asset('js/app.js') }}"></script>
+
   <script src="{{ asset('assets/js/main.js') }}"></script>
+  @auth
+      <script>
+          window.Echo.private('notification.{{ auth()->id() }}').listen("PostChangeActive", (e) => {
+              if (e.status == 1) {
+                  toastr.success(e.notification.content);
+              }
+              if (e.status == 0) {
+                  toastr.error(e.notification.content);
+              }
+              if (e.status == 2) {
+                  toastr.info(e.notification.content);
+              }
+          });
+      </script>
+  @endauth
+
   @stack('js')
   </body>
 

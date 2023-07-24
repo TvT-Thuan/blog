@@ -48,7 +48,7 @@
                                         </div>
                                     @enderror
                                     <div class="text-center mt-3">
-                                        <img id="output" class="img-fluid" width="100%" height="100%" />
+                                        <img src="{{ asset(auth()->user()->image_url) }}" id="output" class="img-fluid" width="100%" height="100%" />
                                     </div>
                                 </div>
                             </div>

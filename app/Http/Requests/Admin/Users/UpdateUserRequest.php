@@ -27,8 +27,9 @@ class UpdateUserRequest extends FormRequest
             "name" => ["bail", "required", "min:5", "max:50", "not_regex:/[\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\'\:\"\\\|\,\.\<\>\/\?]/"],
             "email" => "bail|required|email|not_in|unique:users,email," . $this->user->id,
             "image" => ["bail", "nullable", "image", "file", "max:10240"],
-            "password" => "bail|nullable|min:8|max:50",
+            "password" => ["bail", "nullable" ,"min:8" , "max:50"],
             "is_active" => ["bail", "nullable", "boolean"],
+            "role" => ["bail", "boolean"],
         ];
     }
 }

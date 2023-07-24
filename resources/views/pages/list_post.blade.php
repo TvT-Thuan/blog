@@ -11,7 +11,7 @@
                         @forelse ($category->postsPagination() as $post)
                             <div class="d-md-flex post-entry-2 small-img">
                                 <a href="{{ route('show.posts', $post->slug) }}" class="me-4 thumbnail">
-                                    <img width="400px" height="200px" src="{{ asset($post->image_url) }}" alt=""
+                                    <img class="img-fluid" src="{{ asset($post->image_url) }}" alt=""
                                         style="object-fit: cover">
                                 </a>
                                 <div>
@@ -27,7 +27,7 @@
                                     <p>{{ $post->content_limit2 }}</p>
                                     <div class="d-flex align-items-center author">
                                         <div class="photo">
-                                            <img src="{{ asset($post->user->image_url) }}" alt="" class="img-fluid">
+                                            <img src="{{ asset($post->user->image_url) }}" alt="" height="40px" style="object-fit: cover">
                                         </div>
                                         <div class="name">
                                             <h3 class="m-0 p-0">{{ $post->user->name }}</h3>
