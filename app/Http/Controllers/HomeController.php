@@ -14,14 +14,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use PhpParser\Node\Expr\AssignOp\Pow;
 
+use function App\Helpers\cacheDatabase;
+
 class HomeController extends Controller
 {
     private $categories, $posts_latest;
 
     public function __construct()
     {
-        $this->categories = Category::where("is_active", 1)->get();
-        $this->posts_latest = Post::where("is_active", 1)->whereRelation("category", "is_active", 1)->latest()->limit(5)->with(["user", "category"])->get();
+        $this->categories = cacheDatabase("categories", ["slug", "name"]);
+        $this->posts_latest = cacheDatabase("posts_latest");
         View::share([
             'categories' => $this->categories,
             'posts_latest' => $this->posts_latest
@@ -30,22 +32,21 @@ class HomeController extends Controller
 
     public function index()
     {
-        $posts = Post::where("is_active", 1)->whereRelation("category", "is_active", 1)->with(["user", "category"])->latest()->paginate(5);
-        $posts_hilight = Post::where("is_check", 1)->get();
+        $posts = cacheDatabase("posts_paginate");
+        $sliders =  cacheDatabase("sliders");
         return view("home", [
             'posts' => $posts,
-            'posts_hilight' => $posts_hilight,
+            'posts_hilight' => $sliders,
         ]);
     }
 
     public function showCategory($slug)
     {
-        $posts = Post::where("is_active", 1)->whereRelation("category", "is_active", 1)->with(["user", "category"])->get();
-        $posts_popular = $posts->sortByDesc('view')->slice(0, 5);
-        $posts_trending = $posts->sortByDesc('created_at')->slice(0, 5)->sortByDesc("view");
+        $posts_popular = cacheDatabase("posts_popular");
+        $posts_trending = cacheDatabase("posts_trending");
         $category = Category::where("slug", $slug)->first();
         if ($category == null) {
-            view("pages.details_post", [
+            return view("pages.details_post", [
                 "error" => "Danh mục không tồn tại hoặc đã bị xoá",
                 'posts_popular' => $posts_popular,
                 'posts_trending' => $posts_trending,
@@ -60,12 +61,14 @@ class HomeController extends Controller
 
     public function showPost($slug)
     {
-        $posts = Post::where("is_active", 1)->whereRelation("category", "is_active", 1)->with(["user", "category"])->get();
-        $post = $posts->firstWhere('slug', $slug);
-        $posts_popular = $posts->sortByDesc('view')->slice(0, 5);
-        $posts_trending = $posts->sortByDesc('created_at')->slice(0, 5)->sortByDesc("view");
-        if ($post == null) {
-            view("pages.details_post", [
+        $posts_popular = cacheDatabase("posts_popular");
+        $posts_trending = cacheDatabase("posts_trending");
+        $post = Post::where([
+            ["is_active", 1],
+            ["slug", $slug]
+        ])->first();
+        if (!$post) {
+            return view("pages.details_post", [
                 "error" => "Bài viết không tồn tại hoặc đã bị xoá",
                 'posts_popular' => $posts_popular,
                 'posts_trending' => $posts_trending,
@@ -93,7 +96,7 @@ class HomeController extends Controller
 
     public function updateComment(StoreCommentRequest $request, $slug, Comment $comment)
     {
-        if(!Post::where("slug", $slug)->first()){
+        if (!Post::where("slug", $slug)->first()) {
             return redirect()->route("home");
         };
         $validated = $request->validated();
@@ -103,9 +106,9 @@ class HomeController extends Controller
         return back()->withInput($request->validated())->with("error", "Cập nhật bình luận thất bại vui lòng thử lại");
     }
 
-    public function destroyComment($slug,Comment $comment)
+    public function destroyComment($slug, Comment $comment)
     {
-        if($comment->user_id == auth()->user()->id || auth()->user()->role == 2){
+        if ($comment->user_id == auth()->user()->id || auth()->user()->role == 2) {
             if ($comment->delete()) {
                 return redirect()->route("show.posts", $slug)->with("success", "Xoá bình luận thành công");
             }
@@ -126,11 +129,10 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $posts = Post::where("is_active", 1)->whereRelation("category", "is_active", 1)->with(["user", "category"])->get();
-        $posts_popular = $posts->sortByDesc('view')->slice(0, 5);
-        $posts_trending = $posts->sortByDesc('created_at')->slice(0, 5)->sortByDesc("view");
+        $posts_popular = cacheDatabase("posts_popular");
+        $posts_trending = cacheDatabase("posts_trending");
         $key = $request->key;
-        if($key){
+        if ($key) {
             $posts_results = Post::where('title', 'like', "%{$key}%")->with(["user", "category"])->paginate(5)->appends(['key' => $key]);
             return view("pages.search_result", [
                 "posts" => $posts_results,

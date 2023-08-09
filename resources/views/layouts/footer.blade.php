@@ -118,6 +118,11 @@
           });
       </script>
   @endauth
+  {{-- <script>
+      window.Echo.channel('channel_test').listen("TestEvent", (e) => {
+          console.log(e);
+      });
+  </script> --}}
 
   @stack('js')
   </body>

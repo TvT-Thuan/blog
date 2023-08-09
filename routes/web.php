@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\TestEvent;
 use App\Http\Controllers\Admin\{CategoryAdminController, CommentAdminController, ContactAdminController, PostAdminController, UserAdminController, DashboardController, TodoController};
 use App\Http\Controllers\Auth\{AuthenticationController, SocialiteController};
 use App\Http\Controllers\{HomeController, PostController};
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-use function App\Helpers\cacheDatabase;
 
 Route::get("/", [HomeController::class, "index"])->name("home");
 Route::get("/categories/{slug}", [HomeController::class, "showCategory"])->name("show.categories");
@@ -19,23 +19,15 @@ Route::get("contact", [HomeController::class, "contact"])->name("contact");
 Route::post("contact", [HomeController::class, "storeContact"])->name("store.contact");
 Route::get("/search", [HomeController::class, "search"])->name("search");
 
-// Route::get("/test", function () {
-//     $tudo = Todo::get();
-//     foreach($tudo as $t){
-//         dump($t);
-//         dump(now()->format("Y-m-d H:i:s"));
-//         if(now() == $t->expiry){
-//             return 1;
-//         }
-//         return 0;
-//     }
-// });
-
 Route::get("run", function () {
     Artisan::call("storage:link");
     Artisan::call("queue:work");
     Artisan::call("schedule:work");
     return 1;
+});
+
+Route::get("/test", function () {
+    event(new TestEvent);
 });
 
 Route::middleware("guest")->group(function () {
